@@ -1,0 +1,6 @@
+Python
+pydantic>=2.0 
+scenariogeneration 
+matlotlib 
+pytest 
+

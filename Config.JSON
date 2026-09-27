@@ -1,0 +1,34 @@
+{
+    "Scenario_Name": "AEB_CCrs",
+    "Environment": {
+        "Time_Of_day": "Daylight",
+        "Weather": "Dry"
+    },
+    "Road": {
+        "Length": 100,
+        "Lane": 2 ,
+        "Lane width": 3.5,
+        "friction": 0.8
+    },
+    "Ego": {
+        "Start_x": 0,
+        "Start_Lane": -1,
+        "Velocity": 30
+    },
+
+    "Traffic":{
+        "Start_x": 100,
+        "Start_lane": -1,
+        "velocity": 0
+
+    },
+    "Sim":{
+        "Time": 15.0 
+
+    },
+    "Metrics":{
+        "TTc_Threshold": 1.5,
+        "Max_Dacc": 6
+    }
+
+}

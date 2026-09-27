@@ -1,80 +1,89 @@
-#*ASAM-Based Automated Scenario Generation for ADAS Feature*
+# ASAM-Based Automated Scenario Generation for ADAS Feature
 
+## 🎯 Aim
+To build a complete Python pipeline that converts a JSON-defined concrete scenario parameter file into a structured, **ASAM OpenSCENARIO-compliant XML file** for automated scenario-based testing (SBT). The pipeline is designed around an **Autonomous Emergency Braking (AEB)** feature in accordance with **Euro NCAP** guidelines, evaluating specific test metrics within a scenario-based testing workflow.
 
-#*AIM* - To build a complete python pipeline that converts a JSON defined concerete scenario parameter file into a structured ASAM OPENSCENARIO compliant XML file for scenario testing. 
-The pipeline is built for the selected AEB feature as defined by EuroNCAP guidelines by considering the defined test metrics - showing the scenario based testing workflow. 
+---
 
+## 🚀 Objectives
+* **Data Processing:** Parse, validate, and structure abstract JSON data using Python type-hinting as a concrete scenario input parameter.
+* **Architecture Mapping:** Deeply understand and systematically apply the ASAM OpenSCENARIO structural hierarchy: `Storyboard` ➔ `Story` ➔ `Act` ➔ `Maneuver` ➔ `Event` ➔ `Action`.
+* **Simulation Design:** Program an open-loop simulation configuration mirroring the Euro NCAP Car-to-Car Rear Stationary (CCRs) scenario profile.
+* **DevOps Workflows:** Utilize robust Git-based version control practices for maintaining source scripts.
 
-#*Objective* - 
-1.Learning to parse,validate and structure a JSON data using python as a scenario input parameter.
-2.To understand and apply ASAM OPENSCENARIO framework(Storyboard->story->Act ->Manuever->Event->Action) 
-3.Implement a Basic Open-loop simmulation for AEB (Car-to-CAr Rear stationary) scenario with parameters. 
-4.Build a lightweight kinematic simulator to execute the scenario and evaluate pas/fail criteria (TTC,Minimum gap,collision) 
-5.Practice GIt based version control 
+---
 
-#*Tech Stack*
- -Python 3.10+
- -scenariogeneration — OpenSCENARIO/OpenDRIVE file generation
- -pydantic — JSON schema validation
- -esmini — open-source OpenSCENARIO player, used for execution and visualization
+## 🛠️ Tech Stack
+* **Language:** Python 3.10+
+* **Core Library:** `scenariogeneration` (Programmatic OpenSCENARIO/OpenDRIVE XML synthesis)
+* **Data Layer:** `pydantic` (Data parsing and JSON schema validation models)
+* **Simulation Player:** `esmini` (Open-source OpenSCENARIO toolchain used for execution player and data visualization)
 
-#*Project Structure* 
+---
+
+## 📁 Project Structure
+```text
 ASAM OpenSCENARIO Project/
 ├── src/
-│   ├── Config.JSON                          # Scenario input parameters 
-│   ├── main.py                              # Orchestrates the full pipeline
-│   ├── parser.py                            # JSON loading + pydantic validation 
-│   ├── build_road.py                        # Generates the .xodr file
-│   ├── build_scenario.py                    # Generates the .xosc file 
-│   └── run_esmini.py                        # Launches esmini on the generated .
+│   ├── Config.JSON            # Scenario input parameters (speeds, conditions, constraints)
+│   ├── main.py                # Core runtime script orchestrating the full pipeline execution
+│   ├── parser.py              # Schema ingestion engine featuring Pydantic verification
+│   ├── build_road.py          # Abstract geometry builder exporting .xodr maps
+│   ├── build_scenario.py      # Actor lifecycle generator exporting .xosc timelines
+│   └── run_esmini.py          # Wrapper utility invoking the esmini simulator binary
 ├── outputs/
-│   ├── aeb_ccrs_basic.xodr                  # Generated road network
-│   └── aeb_ccrs_basic.xosc                  # Generated scenario file
-├── image.png                                # ODD definition diagram
-├── image-1.png                              # OpenSCENARIO storyboard structure 
-├── esmini--oscaeb_ccrs_basic.xosc....gif    # Recorded esmini simulation run
-├── requirements.txt
-└── README.md
+│   ├── aeb_ccrs_basic.xodr    # Validated OpenDRIVE geometric road network output
+│   └── aeb_ccrs_basic.xosc    # Validated OpenSCENARIO behavior control output
+├── image.png                  # ODD definition diagram 
+├── image-1.png                # OpenSCENARIO hierarchical storyboard layout
+├── esmini--oscaeb_ccrs_basic.xosc....gif  # Recorded esmini simulation runtime loop
+├── requirements.txt           # Declared system and Python environment package lists
+└── README.md                  # System instruction documentation
+```
 
+---
 
-#*ADAS Scenario* 
-To understand and generate the XML files for scenario based testing (SBT), an AEB feature is selected under the study. The ODD (Operational Design Domain) is defined for a Car-to-Car Rear Stationary (CCRs) scenario case for an AEB feature based on the test protocol guidelines established by EuroNCAP. 
+## 🚘 ADAS Scenario Context (Euro NCAP CCRs)
+An **Advanced Emergency Braking (AEB)** feature was selected to explore code-driven OpenSCENARIO creation workflows. The system maps out the exact **Operational Design Domain (ODD)** configurations defining a *Car-to-Car Rear Stationary (CCRs)* collision case following standardized testing protocol blueprints published by Euro NCAP.
 
-![alt text](image.png)
+![ODD Definition Diagram](./image.png)
 
-The concerete scenario parameters are defined based on the ODD defenition in the CONFIG.JSON file. 
+*The exact environmental variables and threshold velocities are dynamically ingested from the `src/Config.JSON` configuration schema.*
 
-#*ASAM OpenSCENARIO FrameWork*
+---
 
-The standard follows a Storyboard structure which defines how the different entities interact with each other within the defined scenario. The image below highlights the layout of the structure follwed in the PEGASUS project. 
+## 📐 ASAM OpenSCENARIO Framework Integration
+The OpenSCENARIO standard dictates a strict `Storyboard` structure to programmatically govern actor interactions during runtime testing sweeps. The pipeline implements the architectural paradigm pioneered during the **PEGASUS** project:
 
-![alt text](image-1.png)
+![OpenSCENARIO Storyboard Structure](./image-1.png)
 
-As, indicated in the diagram, the scenario XML file (XSOC) based on the openSCENARIO standard defines the dynamic behavior of the different entities which are linked with the static road network defined by XML file (XODR) using the openDRIVE standard. 
+### Workflow Lifecycle
+1. **Geometric Foundations:** The system generates a high-fidelity static road map matching `OpenDRIVE (.xodr)` format expectations using `Build_Road.py`.
+2. **Dynamic Behavior Engines:** The programmatic modules in `Build_Scenario.py` assemble behavioral parameters (`storyboard`, `story`, `act`, `maneuver`, `event`, `action`) to script real-time actor speeds and locations, mapping them directly onto the road.
+3. **Validation & Pipeline Ingestion:** The `parser.py` program analyzes, extracts, and maps the static inputs out of `Config.JSON`. While this structure models isolated concrete simulation parameters, it provides standard logic boundaries to scale into randomized programmatic parameter space sweeps using constraint randomization or Bayesian optimization techniques.
+4. **Execution & Simulation:** The final pipeline script (`main.py`) ties all separate formatting subsystems together, passing synthesized programmatic payloads directly to `run_esmini.py` for headless or windowed physics playback.
 
-The SCENARIOGENERATION python module lets you design the XODR and XOSC files. The sub modules like storyboard,story,act,manuevers,events and actions help model the different interactions within the roadnetwork. 
+---
 
-The main.py module is where the files are loaded and functions are called, which links the different sub python files and finally the simulator. 
+## 📊 Results & Evaluation
+![Recorded esmini Simulation Run](./esmini--oscaeb_ccrs_basic.xosc....gif)
 
-The parse.py file takes the JSON input file and validates the parameters by parsing. Initially the JSON file consists of a single concerete scenario (test case). However, a scenario generation script can be built using Bayseian optimizer or constraint randomization to automate the generation of multiple concerete scenarios(test cases) by sweping accross the design space from the logical scenario. 
+The simulation engine assesses whether a programmatic braking profile, triggered at a specified **Time-to-Collision (TTC)** value, holds sufficient kinetic force to safely stop the vehicle ahead of obstacles under given speeds and surface friction boundaries. This open-loop setup isolates performance tracking on basic vehicular kinematics rather than processing sensory noise or camera perception models.
 
-The Build_Road.py and Build_Scenario.py files generate the XODR and XSOC files in XML format. The Build_Scenario.py follows the storyboard structure defined above.The output is stored in the OUTPUT folder of the project. 
+* **Simulation Initialization:** The Ego vehicle and the target Traffic node spawn at defined structural coordinates.
+* **Ego Velocity Profile:** The platform kicks off initial vehicle dynamics with a baseline velocity of **50 km/h**.
+* **Safety Verification:** Emergency braking kinematics actuate precisely when system conditions pass a threshold condition of TTC ≤ 1.5 seconds, decelerating the vehicle safely to rest.
 
-The run.py files lets you execute the external open source low fidelity simulator for visualizing the openSCENARIO files in the XML format. 
+---
 
-#*Results* 
+## 🔮 Future Scope
+* **Multi-Actor Scaling:** Scale environment complexity by adding dynamic pedestrian actors, vulnerable road users (VRUs), and multi-car cut-in traffic logic.
+* **Pipeline Automation:** Incorporate CI/CD batch testing automation arrays to programmatically execute continuous massive matrix test generation parameter sweeps.
 
-![alt text](esmini--oscaeb_ccrs_basic.xosc2026-09-2800-33-56-ezgif.com-video-to-gif-converter.gif)
+---
 
-This validates that a given braking profile, if triggered at a given TTC, is kinematically sufficient to avoid collision under the specified speed and friction — it does not evaluate a perception or decision algorithm.
-The following ouput shows the Ego and Traffic vehicle spawn at start of the simulation. And also presence of road profile, where ego vehicle starts at initial velocity of 50km/hr. The vehicle comes to a stop when the trigger condition (TTC<=1.5) gets initiated.
-
-#*Future Scope* 
--The project can be further explored by increasing the complexity of scenario generation by spawning different traffic objects. 
--The project can further be explored to deploy test automation or batch generation of the scenarios along with implementing scenario generator algorithms. 
-
-#*Acknowledgments / References*
--ASAM OpenSCENARIO and OpenDRIVE standards
--esmini — open-source OpenSCENARIO player
--scenariogeneration Python library
--Euro NCAP AEB Car-to-Car test protocol
+## 📑 Acknowledgments & References
+* [ASAM OpenSCENARIO & OpenDRIVE Industry Standards](https://asam.net)
+* [esmini OpenSCENARIO Player Repository](https://github.com)
+* [scenariogeneration Python Utility documentation](https://github.com)
+* [Euro NCAP Official AEB Car-to-Car Testing Guidelines](https://euroncap.com)

@@ -13,12 +13,12 @@
     "Ego": {
         "Start_x": 0,
         "Start_Lane": -1,
-        "Velocity": 30
+        "Velocity": 13.9
     },
 
     "Traffic":{
         "Start_x": 100,
-        "Start_lane": -1,
+        "Start_Lane": -1,
         "Velocity": 0
 
     },
